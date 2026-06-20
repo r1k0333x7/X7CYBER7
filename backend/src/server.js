@@ -4,6 +4,7 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { config } from './config.js';
 import authRoutes from './routes/auth.routes.js';
+import scanRoutes from './routes/scan.routes.js';
 import { authenticate, authorize } from './middleware/auth.js';
 
 const app = express();
@@ -20,6 +21,9 @@ app.get('/api/health', (_req, res) => {
 
 // Auth
 app.use('/api/auth', authRoutes);
+
+// Scans
+app.use('/api/scans', scanRoutes);
 
 // Dashboard summary (protected; mock data until scan aggregation lands)
 app.get('/api/dashboard/summary', authenticate, (_req, res) => {
