@@ -34,6 +34,10 @@ X7-CYBER terdiri dari dua bagian yang dideploy terpisah:
    - `NEXT_PUBLIC_API_BASE` = URL backend (mis. `https://x7-backend.up.railway.app`)
 5. Deploy. `frontend/vercel.json` mengunci framework & build command.
 
+> Jika lupa set Root Directory dan Vercel build dari root repo, script
+> `vercel-build` di root `package.json` akan membangun workspace `frontend`
+> sebagai fallback. Tetap disarankan set Root Directory = `frontend`.
+
 ## 3. Setelah deploy
 
 - WebSocket: `frontend/lib/ws.js` mengonversi `http→ws` otomatis, jadi pastikan
