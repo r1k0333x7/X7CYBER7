@@ -9,6 +9,7 @@ export const NAV_ITEMS = [
   { href: '/dns-tools', label: 'DNS Tools', icon: '⌘' },
   { href: '/vulnerability-center', label: 'Vulnerability Center', icon: '⚠' },
   { href: '/threat-feed', label: 'Threat Feed', icon: '☢' },
+  { href: '/attack-surface', label: 'Attack Surface', icon: '◉' },
   { href: '/reports', label: 'Reports', icon: '▥' },
   { href: '/notifications', label: 'Notifications', icon: '◉' },
   { href: '/settings', label: 'Settings', icon: '⚙' }

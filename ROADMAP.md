@@ -31,9 +31,11 @@ Modul dibangun bertahap. Semua bersifat **defensif**.
 ## Fase 4 - Visualisasi & AI
 - [x] Report Generator (CSV/JSON)
 - [x] Real-time WebSocket streaming
-- [ ] Attack Surface Visualization (D3.js / Cytoscape)
+- [x] Attack Surface Visualization (Cytoscape)
+- [x] Scheduler (scan terjadwal)
+- [x] Notifications (in-app + webhook/Discord)
 - [ ] AI Security Assistant & rekomendasi
-- [ ] PDF/ZIP export
+- [ ] PDF/ZIP export, DKIM
 
 ## Halaman
 Dashboard, Scanner, Assets, Monitoring, Domain Intelligence, SSL Checker, DNS Tools, Vulnerability Center, Threat Feed, Reports, Notifications, Settings.
