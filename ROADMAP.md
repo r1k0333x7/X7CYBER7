@@ -9,12 +9,14 @@ Modul dibangun bertahap. Semua bersifat **defensif**.
 - [x] Skema database PostgreSQL (users, assets, scans, vulnerabilities, reports, notifications, audit_logs, settings)
 
 ## Fase 2 - Scanner & Intelligence
-- [ ] Website Scanner (Quick/Deep, queue, live progress, scheduler)
-- [ ] Security Header & Cookie Analyzer
-- [ ] SSL/TLS Security
-- [ ] DNS & Domain Intelligence (RDAP, WHOIS, crt.sh, DoH)
-- [ ] Email Security (SPF/DKIM/DMARC)
-- [ ] Technology & WAF Detection
+- [x] Website Scanner (Quick/Deep, queue, live progress)
+- [x] Security Header Analyzer
+- [x] SSL/TLS Security
+- [x] DNS lookups (DoH)
+- [x] Email Security (SPF/DMARC)
+- [ ] Scheduler
+- [ ] DNS & Domain Intelligence (RDAP, WHOIS, crt.sh)
+- [ ] DKIM, Technology & WAF Detection
 
 ## Fase 3 - Vulnerability & Threat
 - [ ] Vulnerability Intelligence (NVD, OSV, EPSS, CISA KEV)
