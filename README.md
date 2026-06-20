@@ -33,7 +33,7 @@ NVD, MITRE CVE, CISA KEV, OSV.dev, EPSS, VirusTotal (public), SecurityHeaders, G
 
 ## Fitur yang Sudah Berfungsi
 
-- **Auth**: JWT, bcrypt, 2FA (TOTP), RBAC (admin/analyst/viewer), audit log
+- **Akses terbuka**: tanpa login/register; semua route memakai satu system user (auth dihapus)
 - **Scanner**: Quick/Deep scan, queue + worker, live progress (WebSocket + polling)
 - **Analyzer defensif**: Security Headers, SSL/TLS, DNS (DoH), Email (SPF/DMARC), Technology & WAF detection
 - **Domain Intelligence**: RDAP, certificate transparency (crt.sh), subdomain enumeration

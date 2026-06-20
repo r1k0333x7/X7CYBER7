@@ -61,5 +61,7 @@ Lihat `backend/.env.example` dan `frontend/.env.example` untuk detail lengkap.
 - WebSocket: `frontend/lib/ws.js` mengonversi `http→ws` otomatis, jadi pastikan
   `NEXT_PUBLIC_API_BASE` memakai `https://` (akan jadi `wss://`).
 - CORS: untuk produksi, batasi origin di `backend/src/server.js` (`cors({ origin: '<vercel-url>' })`).
-- Register user pertama via halaman login (atau `POST /api/auth/register`).
-  **User pertama otomatis menjadi `admin`** sehingga platform langsung bisa dipakai.
+- Login/register telah dihapus. Platform berjalan terbuka memakai satu
+  system user default (dibuat otomatis saat migrasi). Untuk produksi, batasi
+  akses di lapisan jaringan (mis. Vercel password protection / IP allowlist)
+  bila diperlukan.

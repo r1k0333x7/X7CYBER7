@@ -5,7 +5,7 @@ Modul dibangun bertahap. Semua bersifat **defensif**.
 ## Fase 1 - Fondasi
 - [x] Scaffold monorepo (frontend + backend)
 - [x] Layout dashboard, sidebar terminal, tema light/dark
-- [x] Auth (JWT, 2FA, RBAC)
+- [x] ~~Auth (JWT, 2FA, RBAC)~~ dihapus atas permintaan; platform berjalan terbuka
 - [x] Skema database PostgreSQL (users, assets, scans, vulnerabilities, reports, notifications, audit_logs, settings)
 
 ## Fase 2 - Scanner & Intelligence
