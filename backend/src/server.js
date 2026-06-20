@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { config } from './config.js';
+import { query } from './db/pool.js';
 import authRoutes from './routes/auth.routes.js';
 import scanRoutes from './routes/scan.routes.js';
 import intelRoutes from './routes/intel.routes.js';
@@ -65,14 +66,36 @@ app.use('/api/graph', graphRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/assets', assetRoutes);
 
-// Dashboard summary (protected; mock data until scan aggregation lands)
-app.get('/api/dashboard/summary', authenticate, (_req, res) => {
-  res.json({
-    securityScore: 0,
-    findings: { critical: 0, high: 0, medium: 0, low: 0, informational: 0 },
-    assets: 0,
-    scans: 0
-  });
+// Dashboard summary (protected; aggregates real data)
+app.get('/api/dashboard/summary', authenticate, async (req, res, next) => {
+  try {
+    const [findingsRes, assetsRes, scansRes, scoreRes] = await Promise.all([
+      query(
+        `SELECT v.severity, COUNT(*)::int AS count
+         FROM vulnerabilities v
+         JOIN scans s ON s.id = v.scan_id
+         WHERE v.status = 'open'
+         GROUP BY v.severity`
+      ),
+      query('SELECT COUNT(*)::int AS count FROM assets WHERE owner_id = $1', [req.user.id]),
+      query('SELECT COUNT(*)::int AS count FROM scans'),
+      query("SELECT ROUND(AVG(security_score))::int AS avg FROM scans WHERE status = 'completed' AND security_score IS NOT NULL")
+    ]);
+
+    const findings = { critical: 0, high: 0, medium: 0, low: 0, informational: 0 };
+    for (const row of findingsRes.rows) {
+      if (findings[row.severity] !== undefined) findings[row.severity] = row.count;
+    }
+
+    res.json({
+      securityScore: scoreRes.rows[0]?.avg ?? null,
+      findings,
+      assets: assetsRes.rows[0]?.count ?? 0,
+      scans: scansRes.rows[0]?.count ?? 0
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Example admin-only route

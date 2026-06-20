@@ -43,4 +43,5 @@ X7-CYBER terdiri dari dua bagian yang dideploy terpisah:
 - WebSocket: `frontend/lib/ws.js` mengonversi `http→ws` otomatis, jadi pastikan
   `NEXT_PUBLIC_API_BASE` memakai `https://` (akan jadi `wss://`).
 - CORS: untuk produksi, batasi origin di `backend/src/server.js` (`cors({ origin: '<vercel-url>' })`).
-- Register user pertama via `POST /api/auth/register`, lalu naikkan role-nya ke `admin` di DB.
+- Register user pertama via halaman login (atau `POST /api/auth/register`).
+  **User pertama otomatis menjadi `admin`** sehingga platform langsung bisa dipakai.

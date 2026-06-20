@@ -14,12 +14,18 @@ export async function registerUser({ email, password, fullName, role = 'viewer' 
     err.status = 409;
     throw err;
   }
+
+  // Bootstrap: the very first registered user becomes admin so the platform
+  // is usable out of the box. Subsequent users default to the requested role.
+  const countRes = await query('SELECT COUNT(*)::int AS count FROM users');
+  const effectiveRole = countRes.rows[0].count === 0 ? 'admin' : role;
+
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
   const result = await query(
     `INSERT INTO users (email, password_hash, full_name, role)
      VALUES ($1, $2, $3, $4)
      RETURNING id, email, full_name, role, twofa_enabled, created_at`,
-    [email, passwordHash, fullName || null, role]
+    [email, passwordHash, fullName || null, effectiveRole]
   );
   return result.rows[0];
 }

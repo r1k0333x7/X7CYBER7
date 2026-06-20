@@ -15,6 +15,11 @@ export async function apiFetch(path, options = {}) {
   const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
+    // On auth failure, clear the stale token and redirect to login.
+    if (res.status === 401 && typeof window !== 'undefined') {
+      window.localStorage.removeItem('x7_token');
+      if (window.location.pathname !== '/login') window.location.href = '/login';
+    }
     const err = new Error(data.error || `Request failed (${res.status})`);
     err.status = res.status;
     err.data = data;
