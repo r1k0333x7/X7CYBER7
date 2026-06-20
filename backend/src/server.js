@@ -10,6 +10,8 @@ import reportRoutes from './routes/report.routes.js';
 import notificationRoutes from './routes/notification.routes.js';
 import scheduleRoutes from './routes/schedule.routes.js';
 import graphRoutes from './routes/graph.routes.js';
+import aiRoutes from './routes/ai.routes.js';
+import assetRoutes from './routes/asset.routes.js';
 import { createServer } from 'node:http';
 import { initRealtime } from './realtime.js';
 import { startScheduler } from './services/scheduler.js';
@@ -60,6 +62,8 @@ app.use('/api/reports', reportRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/schedules', scheduleRoutes);
 app.use('/api/graph', graphRoutes);
+app.use('/api/ai', aiRoutes);
+app.use('/api/assets', assetRoutes);
 
 // Dashboard summary (protected; mock data until scan aggregation lands)
 app.get('/api/dashboard/summary', authenticate, (_req, res) => {

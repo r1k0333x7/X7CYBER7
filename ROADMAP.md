@@ -34,7 +34,8 @@ Modul dibangun bertahap. Semua bersifat **defensif**.
 - [x] Attack Surface Visualization (Cytoscape)
 - [x] Scheduler (scan terjadwal)
 - [x] Notifications (in-app + webhook/Discord)
-- [ ] AI Security Assistant & rekomendasi
+- [x] AI Security Assistant & rekomendasi (LLM opsional + fallback rule-based)
+- [x] Asset Inventory
 - [ ] PDF/ZIP export, DKIM
 
 ## Halaman
