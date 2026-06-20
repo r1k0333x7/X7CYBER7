@@ -16,6 +16,11 @@ CREATE TABLE IF NOT EXISTS users (
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
+-- Default system user (auth removed; platform runs open).
+INSERT INTO users (id, email, password_hash, full_name, role)
+VALUES ('00000000-0000-0000-0000-000000000001', 'system@x7.local', '-', 'System', 'admin')
+ON CONFLICT (id) DO NOTHING;
+
 -- ASSETS (domains/subdomains/servers owned or authorized)
 CREATE TABLE IF NOT EXISTS assets (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),

@@ -1,29 +1,22 @@
-import jwt from 'jsonwebtoken';
-import { config } from '../config.js';
+// Authentication has been removed. The platform runs open (no login/register).
+// These middlewares are now no-ops that inject a fixed system user so that
+// existing routes referencing req.user continue to work unchanged.
 
-// Verifies JWT and attaches req.user = { id, email, role }
-export function authenticate(req, res, next) {
-  const header = req.headers.authorization || '';
-  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
-  if (!token) {
-    return res.status(401).json({ error: 'Missing authorization token' });
-  }
-  try {
-    const payload = jwt.verify(token, config.jwtSecret);
-    req.user = { id: payload.sub, email: payload.email, role: payload.role };
-    next();
-  } catch {
-    return res.status(401).json({ error: 'Invalid or expired token' });
-  }
+export const SYSTEM_USER = {
+  id: '00000000-0000-0000-0000-000000000001',
+  email: 'system@x7.local',
+  role: 'admin'
+};
+
+export function authenticate(req, _res, next) {
+  req.user = SYSTEM_USER;
+  next();
 }
 
-// RBAC guard. Usage: authorize('admin'), authorize('admin','analyst')
-export function authorize(...roles) {
-  return (req, res, next) => {
-    if (!req.user) return res.status(401).json({ error: 'Unauthenticated' });
-    if (roles.length && !roles.includes(req.user.role)) {
-      return res.status(403).json({ error: 'Insufficient permissions' });
-    }
+// RBAC guard is a pass-through now (single system user has full access).
+export function authorize() {
+  return (req, _res, next) => {
+    req.user = req.user || SYSTEM_USER;
     next();
   };
 }
