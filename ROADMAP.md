@@ -14,9 +14,9 @@ Modul dibangun bertahap. Semua bersifat **defensif**.
 - [x] SSL/TLS Security
 - [x] DNS lookups (DoH)
 - [x] Email Security (SPF/DMARC)
-- [ ] Scheduler
-- [ ] DNS & Domain Intelligence (RDAP, WHOIS, crt.sh)
-- [ ] DKIM, Technology & WAF Detection
+- [x] DNS & Domain Intelligence (RDAP, crt.sh)
+- [x] Technology & WAF Detection
+- [ ] Scheduler, DKIM
 
 ## Fase 3 - Vulnerability & Threat
 - [ ] Vulnerability Intelligence (NVD, OSV, EPSS, CISA KEV)

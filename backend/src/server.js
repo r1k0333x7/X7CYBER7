@@ -6,6 +6,9 @@ import { config } from './config.js';
 import authRoutes from './routes/auth.routes.js';
 import scanRoutes from './routes/scan.routes.js';
 import intelRoutes from './routes/intel.routes.js';
+import reportRoutes from './routes/report.routes.js';
+import { createServer } from 'node:http';
+import { initRealtime } from './realtime.js';
 import { authenticate, authorize } from './middleware/auth.js';
 
 const app = express();
@@ -29,6 +32,9 @@ app.use('/api/scans', scanRoutes);
 // Intelligence (CVE, domain, DNS, tech/WAF)
 app.use('/api/intel', intelRoutes);
 
+// Reports
+app.use('/api/reports', reportRoutes);
+
 // Dashboard summary (protected; mock data until scan aggregation lands)
 app.get('/api/dashboard/summary', authenticate, (_req, res) => {
   res.json({
@@ -50,6 +56,9 @@ app.use((err, _req, res, _next) => {
   res.status(status).json({ error: err.message || 'Internal server error' });
 });
 
-app.listen(config.port, () => {
-  console.log(`X7 backend listening on port ${config.port}`);
+const httpServer = createServer(app);
+initRealtime(httpServer);
+
+httpServer.listen(config.port, () => {
+  console.log(`X7 backend (HTTP + WS) listening on port ${config.port}`);
 });

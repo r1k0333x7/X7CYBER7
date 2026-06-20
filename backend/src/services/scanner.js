@@ -6,6 +6,7 @@ import { analyzeEmailSecurity } from './analyzers/email.js';
 import { analyzeDomain } from './analyzers/domain.js';
 import { detectTechnology } from './analyzers/tech.js';
 import { computeScore, summarize } from './scoring.js';
+import { broadcast } from '../realtime.js';
 
 // In-memory queue with simple worker. Replace with Redis/BullMQ in production.
 const queue = [];
@@ -22,6 +23,7 @@ function hostnameOf(target) {
 
 async function setProgress(scanId, progress, status) {
   await query('UPDATE scans SET progress = $1, status = COALESCE($2, status) WHERE id = $3', [progress, status || null, scanId]);
+  broadcast({ type: 'scan.progress', scanId, progress, status });
 }
 
 async function runScan(scanId, targetUrl, mode) {
@@ -68,6 +70,7 @@ async function runScan(scanId, targetUrl, mode) {
       'UPDATE scans SET status = $1, progress = 100, security_score = $2, summary = $3, finished_at = now() WHERE id = $4',
       ['completed', score, summary, scanId]
     );
+    broadcast({ type: 'scan.completed', scanId, securityScore: score });
   } catch (err) {
     await query('UPDATE scans SET status = $1, finished_at = now() WHERE id = $2', ['failed', scanId]);
     console.error(`Scan ${scanId} failed:`, err.message);
