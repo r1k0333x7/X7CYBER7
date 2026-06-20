@@ -38,6 +38,24 @@ X7-CYBER terdiri dari dua bagian yang dideploy terpisah:
 > `vercel-build` di root `package.json` akan membangun workspace `frontend`
 > sebagai fallback. Tetap disarankan set Root Directory = `frontend`.
 
+## Variabel Lingkungan
+
+**Wajib (backend):**
+- `DATABASE_URL` — diisi otomatis oleh Railway/Render.
+- `JWT_SECRET` — generate: `openssl rand -hex 32` (Render bisa otomatis).
+- `CORS_ORIGINS` — URL frontend Vercel (produksi).
+- `PGSSL=true` — umumnya diperlukan di Railway/Render.
+
+**Wajib (frontend):**
+- `NEXT_PUBLIC_API_BASE` — URL backend.
+
+**Opsional (tanpa ini semua fitur tetap jalan):**
+- `AI_API_KEY` — AI LLM (https://platform.openai.com/api-keys). Tanpa ini pakai rule-based.
+- `NVD_API_KEY` — rate limit CVE lebih tinggi (https://nvd.nist.gov/developers/request-an-api-key).
+- `NOTIFY_WEBHOOK_URL` — notifikasi Discord/webhook.
+
+Lihat `backend/.env.example` dan `frontend/.env.example` untuk detail lengkap.
+
 ## 3. Setelah deploy
 
 - WebSocket: `frontend/lib/ws.js` mengonversi `http→ws` otomatis, jadi pastikan
