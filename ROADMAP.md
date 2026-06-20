@@ -36,7 +36,8 @@ Modul dibangun bertahap. Semua bersifat **defensif**.
 - [x] Notifications (in-app + webhook/Discord)
 - [x] AI Security Assistant & rekomendasi (LLM opsional + fallback rule-based)
 - [x] Asset Inventory
-- [ ] PDF/ZIP export, DKIM
+- [x] PDF (printable HTML) / ZIP export
+- [x] DKIM validation
 
 ## Halaman
 Dashboard, Scanner, Assets, Monitoring, Domain Intelligence, SSL Checker, DNS Tools, Vulnerability Center, Threat Feed, Reports, Notifications, Settings.

@@ -12,6 +12,21 @@ export async function analyzeEmailSecurity(domain) {
     findings.push({ category: 'email', title: 'SPF record missing', description: 'No v=spf1 record found.', severity: 'medium', mitigation: 'Publish an SPF record to prevent spoofing.' });
   }
 
+  // DKIM: probe common selectors (no enumeration of the mail server itself).
+  const selectors = ['default', 'google', 'selector1', 'selector2', 'k1', 'dkim', 'mail', 's1'];
+  const dkimFound = [];
+  await Promise.all(
+    selectors.map(async (sel) => {
+      const rec = await resolveRecord(`${sel}._domainkey.${domain}`, 'TXT').catch(() => []);
+      const hit = rec.find((r) => /v=DKIM1|p=/.test(r.data.replace(/"/g, '')));
+      if (hit) dkimFound.push(sel);
+    })
+  );
+  result.dkim = dkimFound;
+  if (dkimFound.length === 0) {
+    findings.push({ category: 'email', title: 'DKIM record not found', description: 'No DKIM TXT record found on common selectors.', severity: 'low', mitigation: 'Publish a DKIM public key and sign outbound mail.' });
+  }
+
   const dmarcTxt = await resolveRecord(`_dmarc.${domain}`, 'TXT').catch(() => []);
   const dmarc = dmarcTxt.find((r) => r.data.replace(/"/g, '').startsWith('v=DMARC1'));
   result.dmarc = dmarc ? dmarc.data.replace(/"/g, '') : null;
