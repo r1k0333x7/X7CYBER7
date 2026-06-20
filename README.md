@@ -55,6 +55,16 @@ cd frontend && npm install && npm run dev
 
 Salin `.env.example` ke `.env` di tiap folder dan sesuaikan.
 
+## Modul Tambahan
+
+- **Scheduler**: scan terjadwal otomatis (interval per aset)
+- **Notifications**: in-app + webhook/Discord
+- **Attack Surface**: visualisasi graf (Cytoscape) dari domain/subdomain/tech/WAF/DNS
+- **AI Security Assistant**: penjelasan & prioritas mitigasi (LLM opsional, fallback rule-based)
+- **Asset Inventory**: kelola domain/subdomain/server/IP dengan flag otorisasi
+- **Monitoring**: ringkasan skor & aset terpantau
+- **Deploy**: lihat `DEPLOY.md` (Vercel untuk frontend, Railway/Render untuk backend)
+
 ## Status
 
-Fase 1-4 inti selesai. Sisa: scheduler, PDF/ZIP export, attack surface visualization (D3/Cytoscape), AI assistant. Lihat `ROADMAP.md`.
+Seluruh fase inti (1-4) selesai dan fungsional end-to-end. Sisa opsional: PDF/ZIP export dan validasi DKIM. Lihat `ROADMAP.md`.
