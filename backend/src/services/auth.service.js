@@ -7,7 +7,22 @@ import { config } from '../config.js';
 
 const SALT_ROUNDS = 12;
 
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
 export async function registerUser({ email, password, fullName, role = 'viewer' }) {
+  email = normalizeEmail(email);
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) {
+    const err = new Error('Invalid email format');
+    err.status = 400;
+    throw err;
+  }
+  if (!password || String(password).length < 8) {
+    const err = new Error('Password must be at least 8 characters');
+    err.status = 400;
+    throw err;
+  }
   const existing = await query('SELECT id FROM users WHERE email = $1', [email]);
   if (existing.rowCount > 0) {
     const err = new Error('Email already registered');
@@ -31,6 +46,7 @@ export async function registerUser({ email, password, fullName, role = 'viewer' 
 }
 
 export async function verifyCredentials(email, password) {
+  email = normalizeEmail(email);
   const result = await query(
     'SELECT id, email, password_hash, role, twofa_enabled FROM users WHERE email = $1 AND is_active = TRUE',
     [email]

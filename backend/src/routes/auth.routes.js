@@ -15,6 +15,16 @@ const router = Router();
 
 const authLimiter = rateLimit({ windowMs: 15 * 60 * 1000, max: 20 });
 
+// Diagnostics: confirms the auth service and database are reachable.
+router.get('/health', async (_req, res) => {
+  try {
+    const r = await query('SELECT COUNT(*)::int AS users FROM users');
+    res.json({ status: 'ok', db: 'connected', users: r.rows[0].users });
+  } catch (err) {
+    res.status(503).json({ status: 'error', db: 'unreachable', detail: err.message });
+  }
+});
+
 function logAudit(userId, action, req) {
   query(
     'INSERT INTO audit_logs (user_id, action, ip_address) VALUES ($1, $2, $3)',
