@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { NAV_ITEMS } from '../lib/nav';
 import { useTheme } from '../lib/theme';
-import { clearToken } from '../lib/api';
 
 export default function Topbar() {
   const router = useRouter();
@@ -49,15 +48,6 @@ export default function Topbar() {
       </div>
       <button onClick={toggle} className="text-sm text-slate-300 hover:text-neon transition">
         {theme === 'dark' ? '☀ Light' : '☾ Dark'}
-      </button>
-      <button
-        onClick={() => {
-          clearToken();
-          router.push('/login');
-        }}
-        className="text-sm text-slate-400 hover:text-red-400 transition"
-      >
-        Logout
       </button>
     </header>
   );

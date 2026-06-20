@@ -5,7 +5,6 @@ import { apiFetch } from '../lib/api';
 
 export default function Settings() {
   const qc = useQueryClient();
-  const me = useQuery({ queryKey: ['me'], queryFn: () => apiFetch('/api/auth/me'), retry: false });
   const schedules = useQuery({ queryKey: ['schedules'], queryFn: () => apiFetch('/api/schedules'), retry: false });
 
   const [form, setForm] = useState({ targetUrl: '', mode: 'quick', intervalHours: 24 });
@@ -18,9 +17,7 @@ export default function Settings() {
     <div className="space-y-5">
       <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="glass p-6">
         <h1 className="text-xl font-bold neon-text">Settings</h1>
-        {me.data?.user && (
-          <p className="text-xs text-slate-400 mt-1">{me.data.user.email} · role: {me.data.user.role} · 2FA: {me.data.user.twofa_enabled ? 'on' : 'off'}</p>
-        )}
+        <p className="text-xs text-slate-400 mt-1">Konfigurasi scan terjadwal dan preferensi platform.</p>
       </motion.div>
 
       <div className="glass p-5 space-y-4">

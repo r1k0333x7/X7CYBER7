@@ -1,43 +1,30 @@
-// Lightweight API client for the X7 backend.
+// Lightweight API client for the X7 backend. Authentication has been removed,
+// so no token is attached and 401 handling is no longer needed.
 export const API_BASE =
   process.env.NEXT_PUBLIC_API_BASE || 'http://localhost:4000';
 
-function getToken() {
-  if (typeof window === 'undefined') return null;
-  return window.localStorage.getItem('x7_token');
-}
-
 export async function apiFetch(path, options = {}) {
   const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
-  const token = getToken();
-  if (token) headers.Authorization = `Bearer ${token}`;
 
-  const res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, { ...options, headers });
+  } catch (networkErr) {
+    const err = new Error(
+      `Tidak dapat terhubung ke backend di ${API_BASE}. ` +
+        'Pastikan backend berjalan, NEXT_PUBLIC_API_BASE benar (https), dan CORS mengizinkan domain ini.'
+    );
+    err.status = 0;
+    err.cause = networkErr;
+    throw err;
+  }
+
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
-    // On auth failure, clear the stale token and redirect to login.
-    if (res.status === 401 && typeof window !== 'undefined') {
-      window.localStorage.removeItem('x7_token');
-      if (window.location.pathname !== '/login') window.location.href = '/login';
-    }
     const err = new Error(data.error || `Request failed (${res.status})`);
     err.status = res.status;
     err.data = data;
     throw err;
   }
   return data;
-}
-
-export const auth = {
-  login: (body) => apiFetch('/api/auth/login', { method: 'POST', body: JSON.stringify(body) }),
-  register: (body) => apiFetch('/api/auth/register', { method: 'POST', body: JSON.stringify(body) }),
-  me: () => apiFetch('/api/auth/me')
-};
-
-export function setToken(token) {
-  if (typeof window !== 'undefined') window.localStorage.setItem('x7_token', token);
-}
-
-export function clearToken() {
-  if (typeof window !== 'undefined') window.localStorage.removeItem('x7_token');
 }
