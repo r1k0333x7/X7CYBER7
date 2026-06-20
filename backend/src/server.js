@@ -13,8 +13,25 @@ import { authenticate, authorize } from './middleware/auth.js';
 
 const app = express();
 
+// CORS: comma-separated allowlist via CORS_ORIGINS; falls back to '*' in development.
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
+const corsOptions = allowedOrigins.length
+  ? {
+      origin(origin, callback) {
+        // Allow same-origin / server-to-server requests with no Origin header.
+        if (!origin || allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error('Not allowed by CORS'));
+      },
+      credentials: true
+    }
+  : {};
+
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(rateLimit({ windowMs: 60 * 1000, max: 120 }));
 
