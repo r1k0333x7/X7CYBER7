@@ -11,10 +11,11 @@ export default function Reports() {
     fetch(`${API_BASE}/api/reports/${scanId}/${fmt}`, { headers: { Authorization: `Bearer ${token}` } })
       .then((r) => r.blob())
       .then((blob) => {
+        const ext = fmt === 'pdf' ? 'html' : fmt;
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `x7-report-${scanId}.${fmt}`;
+        a.download = `x7-report-${scanId}.${ext}`;
         a.click();
         URL.revokeObjectURL(url);
       });
@@ -24,7 +25,7 @@ export default function Reports() {
     <div className="space-y-5">
       <motion.div initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} className="glass p-6">
         <h1 className="text-xl font-bold neon-text">Reports</h1>
-        <p className="text-xs text-slate-400 mt-1">Export completed scans as CSV or JSON.</p>
+        <p className="text-xs text-slate-400 mt-1">Export completed scans as CSV, JSON, PDF (printable HTML), or ZIP bundle.</p>
       </motion.div>
       <div className="glass p-5">
         <ul className="space-y-2">
@@ -34,6 +35,8 @@ export default function Reports() {
               <span className="flex gap-2">
                 <button onClick={() => download(s.id, 'csv')} className="text-xs text-neon hover:underline">CSV</button>
                 <button onClick={() => download(s.id, 'json')} className="text-xs text-neon hover:underline">JSON</button>
+                <button onClick={() => download(s.id, 'pdf')} className="text-xs text-neon hover:underline">PDF</button>
+                <button onClick={() => download(s.id, 'zip')} className="text-xs text-neon hover:underline">ZIP</button>
               </span>
             </li>
           ))}
