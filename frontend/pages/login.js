@@ -21,6 +21,8 @@ export default function Login() {
     }
   });
 
+  const [localError, setLocalError] = useState(null);
+
   const register = useMutation({
     mutationFn: () => auth.register({ email: form.email, password: form.password, fullName: form.fullName }),
     onSuccess: () => {
@@ -29,11 +31,23 @@ export default function Login() {
     }
   });
 
-  const update = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const update = (k) => (e) => {
+    setLocalError(null);
+    setForm((f) => ({ ...f, [k]: e.target.value }));
+  };
   const isRegister = mode === 'register';
   const busy = login.isPending || register.isPending;
   const activeError = isRegister ? register.error || login.error : login.error;
   const showError = isRegister ? register.isError || login.isError : login.isError;
+
+  const submit = () => {
+    setLocalError(null);
+    if (isRegister && form.password.length < 8) {
+      setLocalError('Password minimal 8 karakter.');
+      return;
+    }
+    isRegister ? register.mutate() : login.mutate();
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
@@ -42,7 +56,7 @@ export default function Login() {
         animate={{ opacity: 1, scale: 1 }}
         onSubmit={(e) => {
           e.preventDefault();
-          isRegister ? register.mutate() : login.mutate();
+          submit();
         }}
         className="glass p-8 w-full max-w-sm space-y-4"
       >
@@ -83,8 +97,8 @@ export default function Login() {
             className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm outline-none focus:border-neon/50"
           />
         )}
-        {showError && activeError && (
-          <p className="text-xs text-red-400">{activeError.message}</p>
+        {(localError || (showError && activeError)) && (
+          <p className="text-xs text-red-400">{localError || activeError.message}</p>
         )}
         <button
           type="submit"
