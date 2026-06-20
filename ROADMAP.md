@@ -24,11 +24,16 @@ Modul dibangun bertahap. Semua bersifat **defensif**.
 - [ ] Threat Intelligence Feed
 - [ ] Risk Engine & scoring
 
+## Fase 3 - Vulnerability & Threat
+- [x] Vulnerability Intelligence (NVD, OSV, EPSS, CISA KEV)
+- [x] Risk Engine & scoring
+
 ## Fase 4 - Visualisasi & AI
+- [x] Report Generator (CSV/JSON)
+- [x] Real-time WebSocket streaming
 - [ ] Attack Surface Visualization (D3.js / Cytoscape)
 - [ ] AI Security Assistant & rekomendasi
-- [ ] Report Generator (PDF/CSV/JSON/ZIP)
-- [ ] Real-time WebSocket streaming
+- [ ] PDF/ZIP export
 
 ## Halaman
 Dashboard, Scanner, Assets, Monitoring, Domain Intelligence, SSL Checker, DNS Tools, Vulnerability Center, Threat Feed, Reports, Notifications, Settings.
