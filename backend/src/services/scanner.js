@@ -3,6 +3,8 @@ import { analyzeHeaders } from './analyzers/headers.js';
 import { analyzeTls } from './analyzers/ssl.js';
 import { lookupAll } from './analyzers/dns.js';
 import { analyzeEmailSecurity } from './analyzers/email.js';
+import { analyzeDomain } from './analyzers/domain.js';
+import { detectTechnology } from './analyzers/tech.js';
 import { computeScore, summarize } from './scoring.js';
 
 // In-memory queue with simple worker. Replace with Redis/BullMQ in production.
@@ -40,9 +42,15 @@ async function runScan(scanId, targetUrl, mode) {
     const dns = await lookupAll(host);
     await setProgress(scanId, 75);
 
+    const tech = await detectTechnology(normalized);
+
+    let domainData = null;
     if (mode === 'deep') {
       const email = await analyzeEmailSecurity(host);
       findings = findings.concat(email.findings);
+      const domain = await analyzeDomain(host);
+      findings = findings.concat(domain.findings);
+      domainData = { rdap: domain.rdap, subdomains: domain.subdomains };
     }
     await setProgress(scanId, 90);
 
@@ -55,7 +63,7 @@ async function runScan(scanId, targetUrl, mode) {
     }
 
     const score = computeScore(findings);
-    const summary = { ...summarize(findings), dns };
+    const summary = { ...summarize(findings), dns, tech, domain: domainData };
     await query(
       'UPDATE scans SET status = $1, progress = 100, security_score = $2, summary = $3, finished_at = now() WHERE id = $4',
       ['completed', score, summary, scanId]

@@ -5,6 +5,7 @@ import rateLimit from 'express-rate-limit';
 import { config } from './config.js';
 import authRoutes from './routes/auth.routes.js';
 import scanRoutes from './routes/scan.routes.js';
+import intelRoutes from './routes/intel.routes.js';
 import { authenticate, authorize } from './middleware/auth.js';
 
 const app = express();
@@ -24,6 +25,9 @@ app.use('/api/auth', authRoutes);
 
 // Scans
 app.use('/api/scans', scanRoutes);
+
+// Intelligence (CVE, domain, DNS, tech/WAF)
+app.use('/api/intel', intelRoutes);
 
 // Dashboard summary (protected; mock data until scan aggregation lands)
 app.get('/api/dashboard/summary', authenticate, (_req, res) => {
